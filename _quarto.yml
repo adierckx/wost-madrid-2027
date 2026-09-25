@@ -1,0 +1,16 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - "organizers/**"
+
+website:
+  title: "WOST Madrid 2027"
+  navbar: false
+  page-navigation: false
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: false

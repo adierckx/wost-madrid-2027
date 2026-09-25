@@ -1,0 +1,14 @@
+---
+page-layout: full
+toc: false
+---
+
+::: {.landing}
+
+# WOST Madrid 2027
+
+<p class="coming-soon">Coming soon.</p>
+
+<p class="organizers-link"><a href="organizers/">Organizers</a></p>
+
+:::
