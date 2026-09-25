@@ -1,1 +1,1 @@
-Sitemap: https://adierckx.github.io/wost-madrid-2027/sitemap.xml
+Sitemap: https://wost2027.adierckx.com/sitemap.xml
