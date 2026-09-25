@@ -17,6 +17,12 @@ const QUANTUM_HOLD_MS = 800;
 const BLUR_DURATION_MS = 1000;
 const UNBLUR_DURATION_MS = 350;
 
+// A single directional gesture moves between the two stable journey positions.
+// The user never has to accumulate wheel ticks to traverse the animation.
+const JOURNEY_TRAVEL_MS = 1550;
+const JOURNEY_MIN_REVERSE_MS = 420;
+const POSITION_EPSILON_PX = 2;
+
 const canvas = document.querySelector('#universe');
 const stage = document.querySelector('.stage');
 const journey = document.querySelector('.journey');
@@ -43,6 +49,10 @@ let quantumReachedAt = null;
 let focus = 0;
 let visualState = 'journey';
 
+let journeyAnimationRaf = 0;
+let journeyAnimationTarget = null;
+let touchStartY = null;
+
 function setVisualState(nextState) {
   if (nextState === visualState) return;
 
@@ -67,13 +77,157 @@ reduced.addEventListener('change', event => {
   paused = event.matches;
 });
 
-function updateScrollProgress() {
+function journeyGeometry() {
+  const journeyTop = window.scrollY + journey.getBoundingClientRect().top;
   const travel = Math.max(1, journey.offsetHeight - stage.offsetHeight);
-  progress = clamp(-journey.getBoundingClientRect().top / travel);
+
+  return {
+    top: journeyTop,
+    bottom: journeyTop + travel,
+    travel,
+  };
+}
+
+function updateScrollProgress() {
+  const { top, travel } = journeyGeometry();
+  progress = clamp((window.scrollY - top) / travel);
 }
 
 window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+// Loading the site always starts in the classical state. Browser scroll
+// restoration would otherwise occasionally reopen the intro halfway through.
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
 updateScrollProgress();
+
+function journeyEase(t) {
+  // Cosine ease: smooth endpoints without changing the underlying camera path.
+  return 0.5 - 0.5 * Math.cos(Math.PI * t);
+}
+
+function cancelJourneyAnimation() {
+  if (journeyAnimationRaf) cancelAnimationFrame(journeyAnimationRaf);
+  journeyAnimationRaf = 0;
+  journeyAnimationTarget = null;
+}
+
+function animateJourneyTo(target) {
+  const { top, bottom, travel } = journeyGeometry();
+  const targetY = target === 'bottom' ? bottom : top;
+  const startY = window.scrollY;
+  const distance = targetY - startY;
+
+  if (reduced.matches) {
+    cancelJourneyAnimation();
+    window.scrollTo(0, targetY);
+    updateScrollProgress();
+    return;
+  }
+
+  if (Math.abs(distance) <= POSITION_EPSILON_PX) {
+    window.scrollTo(0, targetY);
+    updateScrollProgress();
+    journeyAnimationTarget = null;
+    return;
+  }
+
+  if (journeyAnimationRaf) cancelAnimationFrame(journeyAnimationRaf);
+  journeyAnimationTarget = target;
+
+  const fraction = Math.min(1, Math.abs(distance) / travel);
+  const duration = Math.max(
+    JOURNEY_MIN_REVERSE_MS,
+    JOURNEY_TRAVEL_MS * fraction,
+  );
+  const startedAt = performance.now();
+
+  function step(now) {
+    const t = clamp((now - startedAt) / duration);
+    const eased = journeyEase(t);
+    window.scrollTo(0, startY + distance * eased);
+
+    if (t < 1) {
+      journeyAnimationRaf = requestAnimationFrame(step);
+      return;
+    }
+
+    journeyAnimationRaf = 0;
+    journeyAnimationTarget = null;
+    window.scrollTo(0, targetY);
+    updateScrollProgress();
+  }
+
+  journeyAnimationRaf = requestAnimationFrame(step);
+}
+
+function requestJourneyDirection(direction) {
+  const target = direction > 0 ? 'bottom' : 'top';
+
+  // Repeating the same gesture while the animation is already running does
+  // nothing. Reversing direction immediately turns the journey around.
+  if (journeyAnimationTarget === target) return;
+  animateJourneyTo(target);
+}
+
+function wheelJourney(event) {
+  if (document.body.classList.contains('panel-open')) return;
+  if (event.deltaY === 0) return;
+  event.preventDefault();
+  requestJourneyDirection(Math.sign(event.deltaY));
+}
+
+window.addEventListener('wheel', wheelJourney, { passive: false });
+
+function keyJourney(event) {
+  if (document.body.classList.contains('panel-open')) return;
+  const target = event.target;
+  if (target instanceof HTMLElement && (
+    target.isContentEditable ||
+    ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(target.tagName)
+  )) return;
+
+  const down = ['ArrowDown', 'PageDown', 'End'].includes(event.key) ||
+    (event.key === ' ' && !event.shiftKey);
+  const up = ['ArrowUp', 'PageUp', 'Home'].includes(event.key) ||
+    (event.key === ' ' && event.shiftKey);
+
+  if (!down && !up) return;
+  event.preventDefault();
+  requestJourneyDirection(down ? 1 : -1);
+}
+
+window.addEventListener('keydown', keyJourney);
+
+window.addEventListener('touchstart', event => {
+  if (event.touches.length !== 1) return;
+  touchStartY = event.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener('touchmove', event => {
+  if (document.body.classList.contains('panel-open')) return;
+  if (touchStartY === null || event.touches.length !== 1) return;
+
+  const dy = touchStartY - event.touches[0].clientY;
+  if (Math.abs(dy) < 6) return;
+
+  event.preventDefault();
+  touchStartY = null;
+  requestJourneyDirection(Math.sign(dy));
+}, { passive: false });
+
+window.addEventListener('touchend', () => {
+  touchStartY = null;
+}, { passive: true });
+
+window.addEventListener('touchcancel', () => {
+  touchStartY = null;
+}, { passive: true });
+
+window.addEventListener('load', () => {
+  window.scrollTo(0, journeyGeometry().top);
+  updateScrollProgress();
+}, { once: true });
 
 function updateAutomaticTransition(now, elapsedSeconds) {
   const atQuantumEnd = progress >= QUANTUM_END_THRESHOLD;
