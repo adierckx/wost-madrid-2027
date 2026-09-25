@@ -1,28 +1,81 @@
-:root{--ink:#eef0ee;--muted:#a8b1be;--bg:#080c14;--line:#ffffff25;--accent:#efb17e;--mono:'Sora',sans-serif;--sans:'Sora',sans-serif;--serif:'Sora',sans-serif;color-scheme:dark}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:90px}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--sans)}
-.journey{height:290vh;min-height:1900px;position:relative}
-.stage{position:sticky;top:0;height:100svh;min-height:700px;overflow:hidden;background:#080c14}
-#universe{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y}
-.stage-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,12,20,.5),transparent 68%);pointer-events:none}
-@media(max-width:600px){
-.stage{min-height:760px;height:100svh}
-.journey{min-height:2500px}
-.stage-shade{background:linear-gradient(90deg,#080c1455,transparent)}
+:root {
+  --ink: #eef0ee;
+  --muted: #a8b1be;
+  --bg: #080c14;
+  --line: #ffffff25;
+  --accent: #efb17e;
+  --mono: 'Sora', sans-serif;
+  --sans: 'Sora', sans-serif;
+  --serif: 'Sora', sans-serif;
+  --wost-focus: 0;
+  --wost-navigation-reveal: 0;
+  color-scheme: dark;
 }
-@media(prefers-reduced-motion:reduce){
-html{scroll-behavior:auto}
-*{transition:none!important}
+
+* {
+  box-sizing: border-box;
 }
-.journey{height:360vh;min-height:2400px}
-@media(max-width:600px){
-.journey{min-height:2950px}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 0;
+  overscroll-behavior-y: none;
 }
-html{scroll-padding-top:0;overscroll-behavior-y:none}
-.journey{height:430svh;min-height:0}
-.stage{height:100svh;min-height:0}
-@media(max-width:899px){
-.stage{height:100svh;min-height:0}
-.journey{height:430svh;min-height:0}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.6 var(--sans);
+}
+
+/*
+ * One continuous journey:
+ * 100svh is the sticky viewport itself and the additional 120svh is the
+ * scroll-controlled classical -> quantum transition.
+ */
+.journey {
+  position: relative;
+  height: 220svh;
+  min-height: 0;
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 0;
+  overflow: hidden;
+  background: #080c14;
+}
+
+#universe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+}
+
+.stage-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8, 12, 20, 0.5), transparent 68%);
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .stage-shade {
+    background: linear-gradient(90deg, #080c1455, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  * {
+    transition: none !important;
+  }
 }
