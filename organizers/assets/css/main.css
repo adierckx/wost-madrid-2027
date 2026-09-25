@@ -1,4 +1,229 @@
+/* ============================================================
+   WOST Madrid 2027 — Organizer Hub
+   ============================================================ */
+
+:root {
+  --hub-text: #1d1d1f;
+  --hub-muted: #686868;
+  --hub-border: #d9d9d9;
+  --hub-background: #f7f7f5;
+  --hub-card-background: #ffffff;
+  --hub-accent: #222222;
+  --hub-radius: 14px;
+  --hub-width: 1180px;
+}
+
+/* ------------------------------------------------------------
+   Base
+   ------------------------------------------------------------ */
+
+html,
 body {
-  max-width: 1100px;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--hub-text);
+  background: var(--hub-background);
+}
+
+#quarto-content {
+  padding: 0;
+}
+
+main.content {
+  max-width: none;
+  padding: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--hub-text);
+}
+
+/* ------------------------------------------------------------
+   Main wrapper
+   ------------------------------------------------------------ */
+
+.hub {
+  width: min(var(--hub-width), calc(100% - 3rem));
   margin: 0 auto;
+  padding: 4rem 0 2rem;
+}
+
+/* ------------------------------------------------------------
+   Header
+   ------------------------------------------------------------ */
+
+.hub-header {
+  margin-bottom: 3rem;
+}
+
+.hub-header h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+}
+
+.hub-subtitle {
+  margin: 0.35rem 0 0;
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: var(--hub-muted);
+}
+
+.hub-intro {
+  max-width: 650px;
+  margin-top: 1.5rem;
+  color: var(--hub-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------
+   Main cards
+   ------------------------------------------------------------ */
+
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 4rem;
+}
+
+.hub-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 230px;
+  padding: 1.75rem;
+  background: var(--hub-card-background);
+  border: 1px solid var(--hub-border);
+  border-radius: var(--hub-radius);
+}
+
+.hub-card h2 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.3rem;
+}
+
+.hub-card p {
+  color: var(--hub-muted);
+  line-height: 1.55;
+}
+
+.hub-card .hub-button {
+  margin-top: auto;
+}
+
+/* ------------------------------------------------------------
+   Buttons
+   ------------------------------------------------------------ */
+
+.hub-button {
+  display: inline-block;
+  width: fit-content;
+  padding: 0.7rem 1rem;
+  color: #ffffff !important;
+  background: var(--hub-accent);
+  border: 1px solid var(--hub-accent);
+  border-radius: 8px;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition:
+    transform 120ms ease,
+    opacity 120ms ease;
+}
+
+.hub-button:hover {
+  opacity: 0.82;
+  transform: translateY(-1px);
+}
+
+.hub-button-secondary {
+  color: var(--hub-text) !important;
+  background: transparent;
+  border-color: var(--hub-border);
+}
+
+/* ------------------------------------------------------------
+   Current focus
+   ------------------------------------------------------------ */
+
+.hub-section {
+  margin-top: 1rem;
+}
+
+.hub-section > h2 {
+  margin-bottom: 1.25rem;
+  font-size: 1.6rem;
+}
+
+.focus-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.focus-item {
+  padding: 1.25rem 1.4rem;
+  background: var(--hub-card-background);
+  border: 1px solid var(--hub-border);
+  border-radius: 10px;
+}
+
+.focus-item h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.focus-item p {
+  margin-bottom: 0;
+  color: var(--hub-muted);
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------ */
+
+.hub-footer {
+  margin-top: 4rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--hub-border);
+  color: var(--hub-muted);
+  font-size: 0.8rem;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+
+@media (max-width: 850px) {
+  .hub-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hub-card {
+    min-height: 190px;
+  }
+
+  .focus-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .hub {
+    width: min(100% - 2rem, var(--hub-width));
+    padding-top: 2.5rem;
+  }
+
+  .hub-card {
+    padding: 1.3rem;
+  }
 }
