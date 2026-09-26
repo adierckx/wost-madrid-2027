@@ -1,0 +1,58 @@
+{
+  "site_slug": "wost-madrid-2027",
+  "published_version": 8,
+  "source_commit": "7eaf9a2f12ad8b16970dae94687caaad514c4faa",
+  "source_date": "2026-09-25",
+  "original_source_files": {
+    "scene.js": "9397459a3f404238d37c95bfb373c7f5dc5ad6a2524ebaa337de2c8be764e662",
+    "flow-geometry.js": "3d5683f9c70f2a3c3fec63f91756fbe139775224920484175ce0cf32a37489d5",
+    "app.js": "af708c05ef493eeecc42b9158a2957f189183d5048b877e9a79b4578881564b7",
+    "style.css": "6703c1603a817a7f37b424a5cd4673779029204c8398352f4b87172d79beaa99",
+    "index.html": "b0bd5053f0289e0c0eac6351cda04ec909426ca1813bce9aecd026c268a4241b",
+    "three.module.js": "0a3368c165eea773490aec7b77c22de70e3eac288503409256fdbf4d12578416",
+    "THREE-LICENSE.txt": "4c40a1ef62450b857c3b2aaf294936304cd552d965fbcd9d32d4c5bcf4ba4454"
+  },
+  "literal_blocks": [
+    {
+      "file": "visual-effects/background/background.js",
+      "description": "Original fullscreen background scene, camera, material, and GLSL strings.",
+      "original_block_sha256": "c1377087ce8a0c48c3b4df3f2de4d73a22e166696c6940feba9dd1e1213a5209",
+      "literal_block_preserved": true
+    },
+    {
+      "file": "visual-effects/shared/compositor.js",
+      "description": "Original offscreen render target and nine-tap blur/dimming postprocess.",
+      "original_block_sha256": "9a9ddf30e0c38d30665fe11e12ead88738e022420b33eda58fcc8c1ec5f0d344",
+      "literal_block_preserved": true
+    },
+    {
+      "file": "visual-effects/black-hole/black-hole.js",
+      "description": "Original smooth upper surface, flowing grid shader, fragment buffers, materials, and geometry updater.",
+      "original_block_sha256": "d46542ad682217e15a01251356f8694700e7dabbbc249173e1c386a17cc15b48",
+      "literal_block_preserved": true
+    }
+  ],
+  "changes_only_for_extraction": [
+    "Move original background, black-hole, and compositor blocks into factory modules; rewire relative imports.",
+    "Share original smoothstep helper; flow-geometry smoothstep math is identical for its original three-argument calls.",
+    "Remove all navigation rendering, facets, lights, placement, and their DOM dependencies.",
+    "Remove text/caption/control updates, pause-button UI, and menu/dialog application logic.",
+    "Retain app.js scroll-settling code; rename goToFacets to goToJourneyEnd.",
+    "Keep only original effect/layout CSS selectors, in source order; omit font-face files.",
+    "Use console/dataset diagnostics for WebGL failure because the original fallback was conference UI.",
+    "New minimal index.html supplies only the original required canvas, shade, stage and scroll container."
+  ],
+  "exported_runtime_files": {
+    "index.html": "a1b95d68753374a0196931c2b130f29ef6dd45ed19ea2fdd565945f2e8924887",
+    "visual-effects/background/background.js": "cc7f15e4ef856a41c3d86b63bfd6ed6525b9962f52c9bfcdc21602b33900f92a",
+    "visual-effects/black-hole/black-hole.js": "e7dcb36b7109d5b0dc07ed94ae3572f6e6edbb023a8433bfcd66ef7fc7e6b6c6",
+    "visual-effects/black-hole/flow-geometry.js": "4801a426fbbb6fbe51f563cb6f1af2a9937ab177ddd7ef05503ce9e2ff150150",
+    "visual-effects/runtime.js": "c1b38ec22ddcc9cd798d73e9388df9127a9d3d89f930abc49a0ccf1171923e56",
+    "visual-effects/shared/compositor.js": "b479f138d8ecb65059cbfd4d2af8c6ecbb87edad0cf0d8838aa7bafc5d226fa3",
+    "visual-effects/shared/math.js": "76bf3c2a7f3576bdc8a38f27a54973c3c30009fb31805335cea7f9054eeb70dd",
+    "visual-effects/shared/scroll-settle.js": "92989f998cb04b8243607a769e4cffdeb798271025d5b89fd33e0fc705d59aae",
+    "visual-effects/styles.css": "bf8052c8322dc8975d94eb979be7713b6e420dd1271cfa56d1023fc32d035af8",
+    "visual-effects/vendor/THREE-LICENSE.txt": "4c40a1ef62450b857c3b2aaf294936304cd552d965fbcd9d32d4c5bcf4ba4454",
+    "visual-effects/vendor/three.module.js": "0a3368c165eea773490aec7b77c22de70e3eac288503409256fdbf4d12578416"
+  }
+}
